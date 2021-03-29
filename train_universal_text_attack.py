@@ -16,7 +16,7 @@ from tools import AverageMeter, get_default_device, calculate_mse, calculate_pcc
 
 def get_avg(model, data_file, grades_file, attack_phrase, batch_size):
 
-    input_ids, mask, labels = get_data(data_file, grades_files, attack_phrase)
+    input_ids, mask, labels = get_data(data_file, grades_file, attack_phrase)
     ds = TensorDataset(input_ids, mask, labels)
     dl = DataLoader(ds, batch_size=batch_size)
 
