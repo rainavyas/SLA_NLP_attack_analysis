@@ -69,7 +69,6 @@ if __name__ == "__main__":
     for word in test_words:
         attack_phrase = prev_attack_phrase + ' ' + word
         avg = get_avg(model, data_file, grades_file, attack_phrase, batch_size)
-        print(word, avg)
 
         if avg > best[1]:
             best = (word, avg)
