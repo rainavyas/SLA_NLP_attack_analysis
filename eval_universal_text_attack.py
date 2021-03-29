@@ -9,7 +9,7 @@ import argparse
 from tools import AverageMeter, get_default_device, calculate_mse, calculate_pcc, calculate_less1, calculate_less05, calculate_avg
 from models import BERTGrader
 
-def eval(val_loader, model, device):
+def eval(val_loader, model):
     '''
     Run evaluation
     '''
@@ -24,10 +24,6 @@ def eval(val_loader, model, device):
 
     with torch.no_grad():
         for i, (id, mask, target) in enumerate(val_loader):
-
-            id = id.to(device)
-            mask = mask.to(device)
-            target = target.to(device)
 
             # Forward pass
             pred = model(id, mask)
@@ -64,9 +60,6 @@ if __name__ == "__main__":
     with open('CMDs/eval_universal_text_attack.cmd', 'a') as f:
         f.write(' '.join(sys.argv)+'\n')
 
-    # Get the device
-    device = get_default_device()
-
     # Load the data as tensors
     input_ids_test, mask_test, labels_test = get_data(test_data_file, test_grades_files, attack_phrase)
     test_ds = TensorDataset(input_ids_test, mask_test, labels_test)
@@ -78,7 +71,7 @@ if __name__ == "__main__":
     model.to(device)
 
     # Get all stats
-    mse, pcc, less05, less1, avg = eval(test_dl, model, device)
+    mse, pcc, less05, less1, avg = eval(test_dl, model)
 
     print("STATS for "+model_path+" with universal attack " +attack_phrase)
     print()
