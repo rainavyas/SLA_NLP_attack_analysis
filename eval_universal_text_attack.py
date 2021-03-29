@@ -68,7 +68,6 @@ if __name__ == "__main__":
     # Load the model
     model = BERTGrader()
     model.load_state_dict(torch.load(model_path))
-    model.to(device)
 
     # Get all stats
     mse, pcc, less05, less1, avg = eval(test_dl, model)
