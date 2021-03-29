@@ -8,7 +8,7 @@ import os
 import argparse
 from tools import AverageMeter, get_default_device, calculate_mse, calculate_pcc, calculate_less1, calculate_less05, calculate_avg
 from models import BERTGrader
-from eval_universal_text_attack import eval
+from train_universal_text_attack import get_avg
 import json
 from datetime import date
 
