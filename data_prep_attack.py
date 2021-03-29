@@ -53,7 +53,8 @@ def align(spk_to_utt, grade_dict):
             grades.append(grade_dict[id])
             utts.append(spk_to_utt[id])
         except:
-            print("Falied for speaker " + str(id))
+            pass
+            # print("Falied for speaker " + str(id))
     return utts, grades
 
 def tokenize_text(utts):
