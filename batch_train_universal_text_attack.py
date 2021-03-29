@@ -21,7 +21,7 @@ if __name__ == "__main__":
     commandLineParser.add_argument('TEST_GRADES', type=str, help='test data grades')
     commandLineParser.add_argument('VOCAB', type=str, help='ASR vocab file')
     commandLineParser.add_argument('LOG', type=str, help='Specify txt file to log iteratively better words')
-    commandLineParser.add_argument('--PREV_ATTACK', type=str, default='' help='greedy universal attack phrase')
+    commandLineParser.add_argument('--PREV_ATTACK', type=str, default='', help='greedy universal attack phrase')
     commandLineParser.add_argument('--B', type=int, default=16, help="Specify batch size")
     commandLineParser.add_argument('--SEARCH_SIZE', type=int, default=400, help='Number of words to check')
     commandLineParser.add_argument('--START', type=int, default=0, help='Batch number')
