@@ -53,7 +53,7 @@ if __name__ == "__main__":
     model.load_state_dict(torch.load(model_path))
 
     # Get list of words to try
-    with open(words_file, 'r') as f:
+    with open(vocab_file, 'r') as f:
         test_words = f.readlines()
     test_words = [str(word.strip('\n')).lower() for word in test_words]
 
