@@ -37,7 +37,7 @@ if __name__ == "__main__":
     args = commandLineParser.parse_args()
     model_path = args.MODEL
     data_file = args.TEST_DATA
-    grades_files = args.TEST_GRADES
+    grades_file = args.TEST_GRADES
     vocab_file = args.VOCAB
     prev_attack_phrase = args.PREV_ATTACK
     batch_size = args.B
