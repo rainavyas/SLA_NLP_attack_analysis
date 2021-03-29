@@ -14,7 +14,7 @@ from eval_universal_text_attack import eval
 from models import BERTGrader
 from tools import AverageMeter, get_default_device, calculate_mse, calculate_pcc, calculate_less1, calculate_less05, calculate_avg
 
-def get_avg(model, dl, data_file, grades_file, attack_phrase, batch_size):
+def get_avg(model, data_file, grades_file, attack_phrase, batch_size):
 
     input_ids, mask, labels = get_data(data_file, grades_file, attack_phrase)
     ds = TensorDataset(input_ids, mask, labels)
@@ -66,7 +66,7 @@ if __name__ == "__main__":
     best = (None, 0)
     for word in test_words:
         attack_phrase = prev_attack_phrase + ' ' + word
-        avg = get_avg(model, dl, data_file, grades_file, attack_phrase, batch_size)
+        avg = get_avg(model, data_file, grades_file, attack_phrase, batch_size)
         print(word, avg)
 
         if avg > best[1]:
