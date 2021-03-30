@@ -10,4 +10,6 @@ pip install torch
 
 pip install transformers
 
+pip install scandir
+
 pip install matplotlib
