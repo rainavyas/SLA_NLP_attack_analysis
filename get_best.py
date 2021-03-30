@@ -54,13 +54,12 @@ if __name__ == "__main__":
         curr_path = words_dir+"/"+curr_file
         with open(curr_path, 'r') as f:
             lines = f.readlines()
-        for line in lines[1:]:
+        for line in lines[2:]:
             items = line.split()
             word = str(items[0])
-            cos_dist = float(items[1])
-            #cos_dist = float(items[1][7:-1])
-            if best.check_word_to_be_added(abs(cos_dist)):
-                best.add_word(word, abs(cos_dist))
+            val = float(items[1])
+            if best.check_word_to_be_added(abs(val)):
+                best.add_word(word, abs(val))
 
     print(best.words)
 
