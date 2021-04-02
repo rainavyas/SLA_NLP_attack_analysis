@@ -74,7 +74,7 @@ if __name__ == '__main__':
             curr_words = attack_words[:j]
             attack_phrase = curr_words[0]
             for word in curr_words[1:]:
-                attack_phrase = attack_phrase + ' ' word
+                attack_phrase = attack_phrase + ' ' + word
 
             # Get attacked PCA decomposition
             attack_embedding = get_head_embedding(data_file, grades_file, model, attack_phrase=attack_phrase, head_num=head_num)
