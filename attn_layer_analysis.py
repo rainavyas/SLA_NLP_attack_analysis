@@ -83,15 +83,19 @@ if __name__ == '__main__':
     # Get command line arguments
     commandLineParser = argparse.ArgumentParser()
     commandLineParser.add_argument('MODEL', type=str, help='trained .th model')
+    commandLineParser.add_argument('TRAIN_DATA', type=str, help='prepped train data file')
     commandLineParser.add_argument('TEST_DATA', type=str, help='prepped test data file')
+    commandLineParser.add_argument('TRAIN_GRADES', type=str, help='train data grades')
     commandLineParser.add_argument('TEST_GRADES', type=str, help='test data grades')
     commandLineParser.add_argument('ATTACK', type=str, help='universal attack phrase')
     commandLineParser.add_argument('--rank_lim', type=int, default=768, help="How many principal ranks to show")
 
     args = commandLineParser.parse_args()
     model_path = args.MODEL
-    data_file = args.TEST_DATA
-    grades_file = args.TEST_GRADES
+    train_data_file = args.TRAIN_DATA
+    test_data_file = args.TEST_DATA
+    train_grades_file = args.TRAIN_GRADES
+    test_grades_file = args.TEST_GRADES
     attack_phrase = args.ATTACK
     rank_lim = args.rank_lim
 
@@ -107,17 +111,18 @@ if __name__ == '__main__':
     model.eval()
 
     for head_num in range(1,5):
-        # Use authentic data to create eigenvector basis
-        auth_embedding = get_head_embedding(data_file, grades_file, model, attack_phrase='', head_num=head_num)
+        # Use authentic training data to create eigenvector basis
+        auth_embedding = get_head_embedding(train_data_file, train_grades_file, model, attack_phrase='', head_num=head_num)
         correction_mean = torch.mean(auth_embedding, dim=0)
         cov = get_covariance_matrix(auth_embedding)
         e, v = get_e_v(cov)
 
-        # Get authenetic PCA decomposition
+        # Get authenetic PCA decomposition for test data
+        auth_embedding = get_head_embedding(test_data_file, test_grades_file, model, attack_phrase='', head_num=head_num)
         ranks, cos_dists_auth = get_eigenvector_decomposition_magnitude(v, auth_embedding, correction_mean)
 
-        # Get attacked PCA decomposition
-        attack_embedding = get_head_embedding(data_file, grades_file, model, attack_phrase=attack_phrase, head_num=head_num)
+        # Get attacked PCA decomposition for test data
+        attack_embedding = get_head_embedding(test_data_file, test_grades_file, model, attack_phrase=attack_phrase, head_num=head_num)
         ranks, cos_dists_attack = get_eigenvector_decomposition_magnitude(v, attack_embedding, correction_mean)
 
         # Plot the data
