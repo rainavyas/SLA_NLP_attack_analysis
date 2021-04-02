@@ -105,7 +105,7 @@ if __name__ == '__main__':
     model.load_state_dict(torch.load(model_path))
     model.eval()
 
-    for head_num in range(1:5):
+    for head_num in range(1,5):
         # Use authentic data to create eigenvector basis
         auth_embedding = get_head_embedding(data_file, grades_file, model, attack_phrase='', head_num=head_num)
         correction_mean = torch.mean(auth_embedding, dim=0)
