@@ -45,7 +45,7 @@ def get_head_embedding(data_file, grades_file, model, attack_phrase='', head_num
     '''
     Gives the output embeddings of chosen head after BERT encoder
     '''
-    input_ids, mask, labels = get_data(data_file, grades_files, attack_phrase)
+    input_ids, mask, labels = get_data(data_file, grades_file, attack_phrase)
     model.eval()
     with torch.no_grad():
         output = model.encoder(input_ids, mask)
