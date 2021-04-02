@@ -17,10 +17,11 @@ import matplotlib.pyplot as plt
 def plot_decomposition(ranks, cos_dists_auth, cos_dists_attack_list, filename, rank_lim=768):
     ranks = ranks[:rank_lim]
     cos_dists_auth = cos_dists_auth[:rank_lim]
-    cos_dists_attack = cos_dists_attack[:rank_lim]
 
     plt.plot(ranks, cos_dists_auth, label="Original")
     for i in range(len(cos_dists_attack_list)):
+        cos_dists_attack = cos_dists_attack_list[i]
+        cos_dists_attack = cos_dists_attack[:rank_lim]
         plt.plot(ranks, cos_dists_attack, label="Attack, k="+str(i+1))
     plt.xlabel("Eigenvalue Rank")
     plt.ylabel("Average Absolute Cosine Distance")
