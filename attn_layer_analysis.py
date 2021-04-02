@@ -65,4 +65,60 @@ def get_head_embedding(data_file, grades_file, model, attack_phrase='', head_num
     return head
 
 def plot_decomposition(ranks, cos_dists_auth, cos_dists_attack, filename, rank_lim=768):
-    # TODO
+    ranks = ranks[:rank_lim]
+    cos_dists_auth = cos_dists_auth[:rank_lim]
+    cos_dists_attack = cos_dists_attack[:rank_lim]
+
+    plt.plot(ranks, cos_dists_auth, label="Original")
+    plt.plot(ranks, cos_dists_attack, label="Attacked")
+    plt.xlabel("Eigenvalue Rank")
+    plt.ylabel("Average Absolute Cosine Distance")
+    plt.legend()
+    plt.savefig(filename)
+    plt.clf()
+
+if __name__ == '__main__':
+
+    # Get command line arguments
+    commandLineParser = argparse.ArgumentParser()
+    commandLineParser.add_argument('MODEL', type=str, help='trained .th model')
+    commandLineParser.add_argument('TEST_DATA', type=str, help='prepped test data file')
+    commandLineParser.add_argument('TEST_GRADES', type=str, help='test data grades')
+    commandLineParser.add_argument('ATTACK', type=str, help='universal attack phrase')
+    commandLineParser.add_argument('--rank_lim', type=int, default=768, help"How many principal ranks to show")
+
+    args = commandLineParser.parse_args()
+    model_path = args.MODEL
+    data_file = args.TEST_DATA
+    grades_files = args.TEST_GRADES
+    attack_phrase = args.ATTACK
+    rank_lim = args.rank_lim
+
+    # Save the command run
+    if not os.path.isdir('CMDs'):
+        os.mkdir('CMDs')
+    with open('CMDs/attn_layer_analysis.cmd', 'a') as f:
+        f.write(' '.join(sys.argv)+'\n')
+
+    # Load the model
+    model = BERTGrader()
+    model.load_state_dict(torch.load(model_path))
+    model.eval()
+
+    for head_num in range(1:5):
+        # Use authentic data to create eigenvector basis
+        auth_embedding = get_head_embedding(data_file, grades_file, model, attack_phrase='', head_num=head_num)
+        correction_mean = torch.mean(auth_embedding, dim=0)
+        cov = get_covariance_matrix(auth_embedding)
+        e, v = get_e_v(cov)
+
+        # Get authenetic PCA decomposition
+        ranks, cos_dists_auth = get_eigenvector_decomposition_magnitude(v, auth_embedding, correction_mean)
+
+        # Get attacked PCA decomposition
+        attack_embedding = get_head_embedding(data_file, grades_file, model, attack_phrase=attack_phrase, head_num=head_num)
+        ranks, cos_dists_attack = get_eigenvector_decomposition_magnitude(v, attack_embedding, correction_mean)
+
+        # Plot the data
+        filename = "pca_decomp_head"+str(head_num)+".png"
+        plot_decomposition(ranks, cos_dists_auth, cos_dists_attack, filename, rank_lim=rank_lim)
