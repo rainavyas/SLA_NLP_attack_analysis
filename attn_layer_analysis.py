@@ -90,7 +90,7 @@ if __name__ == '__main__':
     args = commandLineParser.parse_args()
     model_path = args.MODEL
     data_file = args.TEST_DATA
-    grades_files = args.TEST_GRADES
+    grades_file = args.TEST_GRADES
     attack_phrase = args.ATTACK
     rank_lim = args.rank_lim
 
