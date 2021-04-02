@@ -85,7 +85,7 @@ if __name__ == '__main__':
     commandLineParser.add_argument('TEST_DATA', type=str, help='prepped test data file')
     commandLineParser.add_argument('TEST_GRADES', type=str, help='test data grades')
     commandLineParser.add_argument('ATTACK', type=str, help='universal attack phrase')
-    commandLineParser.add_argument('--rank_lim', type=int, default=768, help"How many principal ranks to show")
+    commandLineParser.add_argument('--rank_lim', type=int, default=768, help="How many principal ranks to show")
 
     args = commandLineParser.parse_args()
     model_path = args.MODEL
