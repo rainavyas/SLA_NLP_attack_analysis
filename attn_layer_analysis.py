@@ -73,7 +73,7 @@ def plot_decomposition(ranks, cos_dists_auth, cos_dists_attack, filename, rank_l
     plt.plot(ranks, cos_dists_attack, label="Attacked")
     plt.xlabel("Eigenvalue Rank")
     plt.ylabel("Average Absolute Cosine Distance")
-    plt.xscale('log')
+    plt.yscale('log')
     plt.legend()
     plt.savefig(filename)
     plt.clf()
