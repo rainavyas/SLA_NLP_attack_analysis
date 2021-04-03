@@ -41,6 +41,7 @@ if __name__ == '__main__':
     commandLineParser.add_argument('TEST_GRADES', type=str, help='test data grades')
     commandLineParser.add_argument('ATTACK', type=str, help='universal attack phrase')
     commandLineParser.add_argument('--rank_lim', type=int, default=768, help="How many principal ranks to show")
+    commandLineParser.add_argument('--total_heads', type=int, default=4, help='analyse how many heads')
 
     args = commandLineParser.parse_args()
     model_path = args.MODEL
@@ -50,6 +51,7 @@ if __name__ == '__main__':
     test_grades_file = args.TEST_GRADES
     attack_phrase = args.ATTACK
     rank_lim = args.rank_lim
+    total_heads = args.total_heads
 
     # Save the command run
     if not os.path.isdir('CMDs'):
@@ -62,7 +64,7 @@ if __name__ == '__main__':
     model.load_state_dict(torch.load(model_path))
     model.eval()
 
-    for head_num in range(1,5):
+    for head_num in range(1,total_heads+1):
         # Use authentic trainig data to create eigenvector basis
         auth_embedding = get_head_embedding(train_data_file, train_grades_file, model, attack_phrase='', head_num=head_num)
         correction_mean = torch.mean(auth_embedding, dim=0)
