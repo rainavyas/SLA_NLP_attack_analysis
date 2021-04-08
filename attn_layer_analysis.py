@@ -148,4 +148,4 @@ if __name__ == '__main__':
         filename = "pca_decomp_head"+str(head_num)+".png"
         plot_decomposition(ranks, cos_dists_auth, cos_dists_attack, filename, rank_lim=rank_lim)
         filename = "pca_whitened_decomp_head"+str(head_num)+".png"
-        plot_pca_whitened_decomposition(ranks, whitened_cos_dists_auth, whitened_cos_dists_attack, filename)
+        plot_pca_whitened_decomposition(ranks, whitened_cos_dists_auth, whitened_cos_dists_attack, filename, rank_lim=rank_lim)
