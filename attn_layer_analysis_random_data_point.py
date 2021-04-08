@@ -149,7 +149,7 @@ if __name__ == '__main__':
         ranks, cos_dists_auth, whitened_cos_dists_auth = get_eigenvector_decomposition_magnitude(v, e, auth_embedding, correction_mean)
 
         # Get attacked PCA decomposition for test data
-        attack_embedding = get_head_sample(test_data_file, test_grades_file, model, attack_phrase=attack_phrase, sample_index=sample_index, head_num=head_num)
+        attack_embedding = get_head_embedding_sample(test_data_file, test_grades_file, model, attack_phrase=attack_phrase, sample_index=sample_index, head_num=head_num)
         ranks, cos_dists_attack, whitened_cos_dists_attack = get_eigenvector_decomposition_magnitude(v, e, attack_embedding, correction_mean)
 
         # Plot the data
