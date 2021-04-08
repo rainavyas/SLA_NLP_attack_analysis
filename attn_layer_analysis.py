@@ -91,6 +91,7 @@ def plot_pca_whitened_decomposition(ranks, cos_dists_auth, cos_dists_attack, fil
     plt.plot(ranks, cos_dists_auth, label="Original")
     plt.xlabel("Eigenvalue Rank")
     plt.ylabel("Whitened Average Absolute Cosine Distance")
+    plt.yscale('log')
     plt.legend()
     plt.savefig(filename)
     plt.clf()
