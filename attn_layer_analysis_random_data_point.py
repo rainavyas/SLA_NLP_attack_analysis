@@ -129,7 +129,7 @@ if __name__ == '__main__':
     # Save the command run
     if not os.path.isdir('CMDs'):
         os.mkdir('CMDs')
-    with open('CMDs/attn_layer_analysis.cmd', 'a') as f:
+    with open('CMDs/attn_layer_analysis_random_data_point.cmd', 'a') as f:
         f.write(' '.join(sys.argv)+'\n')
 
     # Load the model
