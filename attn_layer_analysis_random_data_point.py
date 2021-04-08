@@ -52,8 +52,8 @@ def get_head_embedding_sample(data_file, grades_file, model, attack_phrase='', s
     Gives the output embeddings of chosen head after BERT encoder
     '''
     input_ids, mask, labels = get_data(data_file, grades_file, attack_phrase)
-    input_ids = input_ids[sample_index]
-    mask = mask[sample_index]
+    input_ids = torch.unsqueeze(input_ids[sample_index], 0)
+    mask = torch.unsqueeze(mask[sample_index], 0)
 
     model.eval()
     with torch.no_grad():
