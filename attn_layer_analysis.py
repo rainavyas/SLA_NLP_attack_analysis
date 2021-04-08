@@ -20,11 +20,12 @@ from tools import AverageMeter
 from pca_tools import get_covariance_matrix, get_e_v
 import matplotlib.pyplot as plt
 
-def get_eigenvector_decomposition_magnitude(eigenvectors, X, correction_mean):
+def get_eigenvector_decomposition_magnitude(eigenvectors, eigenvalues, X, correction_mean):
     '''
     Mean average of magnitude of cosine distance to each eigenevector
     '''
     cos_dists = []
+    whitened_cos_dists = []
     ranks = []
 
     with torch.no_grad():
@@ -37,9 +38,12 @@ def get_eigenvector_decomposition_magnitude(eigenvectors, X, correction_mean):
             v = eigenvectors[i]
             v_repeat = v.repeat(X.size(0), 1)
             abs_cos_dist = torch.abs(cos(X, v_repeat))
+            whitened_abs_cos_dist = abs_cos_dist/eigenvalues[i]
             cos_dists.append(torch.mean(abs_cos_dist).item())
+            whitened_cos_dists.append(torch.mean(whitened_abs_cos_dist).item())
 
-    return ranks, cos_dists
+    return ranks, cos_dists, whitened_cos_dists
+
 
 def get_head_embedding(data_file, grades_file, model, attack_phrase='', head_num=1):
     '''
@@ -69,11 +73,24 @@ def plot_decomposition(ranks, cos_dists_auth, cos_dists_attack, filename, rank_l
     cos_dists_auth = cos_dists_auth[:rank_lim]
     cos_dists_attack = cos_dists_attack[:rank_lim]
 
-    plt.plot(ranks, cos_dists_auth, label="Original")
     plt.plot(ranks, cos_dists_attack, label="Attacked")
+    plt.plot(ranks, cos_dists_auth, label="Original")
     plt.xlabel("Eigenvalue Rank")
     plt.ylabel("Average Absolute Cosine Distance")
     plt.yscale('log')
+    plt.legend()
+    plt.savefig(filename)
+    plt.clf()
+
+def plot_pca_whitened_decompositionplot_decomposition(ranks, cos_dists_auth, cos_dists_attack, filename, rank_lim=768):
+    ranks = ranks[:rank_lim]
+    cos_dists_auth = cos_dists_auth[:rank_lim]
+    cos_dists_attack = cos_dists_attack[:rank_lim]
+
+    plt.plot(ranks, cos_dists_attack, label="Attacked")
+    plt.plot(ranks, cos_dists_auth, label="Original")
+    plt.xlabel("Eigenvalue Rank")
+    plt.ylabel("Whitened Average Absolute Cosine Distance")
     plt.legend()
     plt.savefig(filename)
     plt.clf()
@@ -121,12 +138,14 @@ if __name__ == '__main__':
 
         # Get authenetic PCA decomposition for test data
         auth_embedding = get_head_embedding(test_data_file, test_grades_file, model, attack_phrase='', head_num=head_num)
-        ranks, cos_dists_auth = get_eigenvector_decomposition_magnitude(v, auth_embedding, correction_mean)
+        ranks, cos_dists_auth, whitened_cos_dists_auth = get_eigenvector_decomposition_magnitude(v, e, auth_embedding, correction_mean)
 
         # Get attacked PCA decomposition for test data
         attack_embedding = get_head_embedding(test_data_file, test_grades_file, model, attack_phrase=attack_phrase, head_num=head_num)
-        ranks, cos_dists_attack = get_eigenvector_decomposition_magnitude(v, attack_embedding, correction_mean)
+        ranks, cos_dists_attack, whitened_cos_dists_attack = get_eigenvector_decomposition_magnitude(v, e, attack_embedding, correction_mean)
 
         # Plot the data
         filename = "pca_decomp_head"+str(head_num)+".png"
         plot_decomposition(ranks, cos_dists_auth, cos_dists_attack, filename, rank_lim=rank_lim)
+        filename = "pca_whitened_decomp_head"+str(head_num)+".png"
+        plot_pca_whitened_decomposition(ranks, whitened_cos_dists_auth, whitened_cos_dists_attack, filename)
