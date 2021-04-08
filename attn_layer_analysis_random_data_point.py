@@ -47,7 +47,7 @@ def get_eigenvector_decomposition_magnitude(eigenvectors, eigenvalues, X, correc
 
     return ranks, cos_dists, whitened_cos_dists
 
-def get_head_embedding_sample(data_file, grades_file, model, attack_phrase='', sample_index, head_num=1):
+def get_head_embedding_sample(data_file, grades_file, model, attack_phrase='', sample_index=27, head_num=1):
     '''
     Gives the output embeddings of chosen head after BERT encoder
     '''
