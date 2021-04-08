@@ -82,7 +82,7 @@ def plot_decomposition(ranks, cos_dists_auth, cos_dists_attack, filename, rank_l
     plt.savefig(filename)
     plt.clf()
 
-def plot_pca_whitened_decompositionplot_decomposition(ranks, cos_dists_auth, cos_dists_attack, filename, rank_lim=768):
+def plot_pca_whitened_decomposition(ranks, cos_dists_auth, cos_dists_attack, filename, rank_lim=768):
     ranks = ranks[:rank_lim]
     cos_dists_auth = cos_dists_auth[:rank_lim]
     cos_dists_attack = cos_dists_attack[:rank_lim]
