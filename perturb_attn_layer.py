@@ -51,13 +51,13 @@ def get_perturbation_impact(v, head1, head2, head3, head4, labels, model, epsilo
     model.eval()
 
     for i in range(0, v.size(0), stepsize):
-        heads = [head1, head2, head3, head4]
         ranks.append(i)
         curr_v = v[i]
         with torch.no_grad():
             attackA, attackB = make_attack(curr_v, epsilon)
             best_avg = 0
             for attack in [attackA, attackB]:
+                heads = [head1, head2, head3, head4]
                 heads[head_num-1] = heads[head_num-1] + attack
                 all_heads = torch.cat(heads, dim=1)
                 h1 = model.layer1(all_heads).clamp(min=0)
