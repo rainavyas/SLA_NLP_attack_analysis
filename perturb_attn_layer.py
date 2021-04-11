@@ -50,7 +50,7 @@ def get_perturbation_impact(v, head1, head2, head3, head4, labels, model, epsilo
 
     model.eval()
 
-    for i range(0, v.size(0), stepsize):
+    for i in range(0, v.size(0), stepsize):
         heads = [head1, head2, head3, head4]
         ranks.append(i)
         curr_v = v[i]
