@@ -8,7 +8,7 @@ import torch
 import torch.nn as nn
 from torch.utils.data import TensorDataset
 from torch.utils.data import DataLoader
-from data_prep import get_data
+from data_prep_attack import get_data
 import sys
 import os
 import argparse
@@ -102,13 +102,13 @@ if __name__ == '__main__':
     handler = Layer_Handler(model, layer_num=layer_num)
 
     # Use training data to get eigenvector basis
-    input_ids, mask, _ = get_data(train_data_file, train_grades_file)
+    input_ids, mask, _ = get_data(train_data_file, train_grades_file, attack_phrase='')
     hidden_states = handler.get_layern_outputs(input_ids, mask)
     cov = get_covariance_matrix(hidden_states[:,token_pos,:])
     e, v = get_e_v(cov)
 
     # Get test data
-    input_ids, mask, labels = get_data(test_data_file, test_grades_file)
+    input_ids, mask, labels = get_data(test_data_file, test_grades_file, attack_phrase='')
 
     # Perturb in each eigenvector direction vs rank
     ranks, mses, avg_grades = get_perturbation_impact(handler, v, input_ids, mask, labels, model, epsilon, stepsize=stepsize, token_pos=token_pos)
