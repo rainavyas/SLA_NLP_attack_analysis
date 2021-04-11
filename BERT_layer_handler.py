@@ -18,9 +18,10 @@ class Layer_Handler():
         '''
         Get output hidden states from nth layer
         '''
-        hidden_states = self.model.encoder.embeddings(input_ids)
+        hidden_states = self.model.encoder.embeddings(input_ids=input_ids)
         for layer_module in self.model.encoder.encoder.layer[:self.layer_num]:
             layer_outputs = layer_module(hidden_states, attention_mask)
+            print("managed")
             hidden_states = layer_outputs[0]
         return hidden_states
 
