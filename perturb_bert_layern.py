@@ -90,7 +90,7 @@ if __name__ == '__main__':
     # Save the command run
     if not os.path.isdir('CMDs'):
         os.mkdir('CMDs')
-    with open('CMDs/perturb_inp_emb.cmd', 'a') as f:
+    with open('CMDs/perturb_bert_layern.cmd', 'a') as f:
         f.write(' '.join(sys.argv)+'\n')
 
     # Load the model
