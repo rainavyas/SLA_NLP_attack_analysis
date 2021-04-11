@@ -46,6 +46,7 @@ def get_perturbation_impact(v, input_embeddings, mask, labels, model, epsilon, s
     model.eval()
 
     for i in range(0, v.size(0), stepsize):
+        print("On rank", i)
         ranks.append(i)
         curr_v = v[i]
         with torch.no_grad():
