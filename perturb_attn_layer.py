@@ -60,9 +60,9 @@ def get_perturbation_impact(v, head1, head2, head3, head4, labels, model, epsilo
             for attack in [attackA, attackB]:
                 heads[head_num-1] = heads[head_num-1] + attack
                 all_heads = torch.cat(heads, dim=1)
-                h1 = self.model.layer1(all_heads).clamp(min=0)
-                h2 = self.model.layer2(h1).clamp(min=0)
-                y = self.model.layer3(h2).squeeze()
+                h1 = model.layer1(all_heads).clamp(min=0)
+                h2 = model.layer2(h1).clamp(min=0)
+                y = model.layer3(h2).squeeze()
                 mse = calculate_mse(y, labels)
                 if torch.mean(y).item() > best_avg:
                     best_avg = torch.mean(y).item()
