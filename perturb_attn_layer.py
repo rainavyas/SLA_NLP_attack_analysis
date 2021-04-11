@@ -114,13 +114,13 @@ if __name__ == '__main__':
     model.eval()
 
     # Use training data to get eigenvector basis
-    head1, head2, head3, head4, _ = get_head_embedding(train_data_file, train_grades_file, model, attack_phrase='')
+    head1, head2, head3, head4, _ = get_head_embeddings(train_data_file, train_grades_file, model, attack_phrase='')
     heads = [head1, head2, head3, head4]
     cov = get_covariance_matrix(heads[head-1])
     e, v = get_e_v(cov)
 
     # Get test data embeddings
-    test_head1, test_head2, test_head3, test_head4, test_labels = get_head_embedding(test_data_file, test_grades_file, model, attack_phrase='')
+    test_head1, test_head2, test_head3, test_head4, test_labels = get_head_embeddings(test_data_file, test_grades_file, model, attack_phrase='')
 
     # Perturb in each eigenvector direction vs rank
     ranks, mses, avg_grades = get_perturbation_impact(v, test_head1, test_head2, test_head3, test_head4, test_labels, model, epsilon, head, stepsize=stepsize)
