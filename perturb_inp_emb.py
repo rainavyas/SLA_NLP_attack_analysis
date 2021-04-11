@@ -27,7 +27,7 @@ def get_input_embeddings(data_file, grades_file, model, attack_phrase=''):
     model.eval()
 
     embedding_mapping = model.encoder.embeddings.word_embeddings
-    embedded_tokens = torch.tensor(embedding_mapping(input_ids))
+    embedded_tokens = embedding_mapping(input_ids).clone()
 
     return embedded_tokens, mask, labels
 
