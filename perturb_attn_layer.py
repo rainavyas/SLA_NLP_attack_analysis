@@ -73,9 +73,9 @@ def get_perturbation_impact(v, head1, head2, head3, head4, labels, model, epsilo
 
 def plot_data_vs_rank(ranks, data, yname, filename):
 
-    plt.plot(ranks, data))
+    plt.plot(ranks, data)
     plt.xlabel("Eigenvalue Rank")
-    plt.ylabel(yname))
+    plt.ylabel(yname)
     plt.savefig(filename)
     plt.clf()
 
