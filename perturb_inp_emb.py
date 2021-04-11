@@ -38,7 +38,7 @@ def make_attack(vec, epsilon):
     attackB = -1*attackA
     return attackA, attackB
 
-def get_perturbation_impact(v, input_embeddings, mask, labels, model, epsilon, head_num, stepsize=1, token_pos=0):
+def get_perturbation_impact(v, input_embeddings, mask, labels, model, epsilon, stepsize=1, token_pos=0):
     ranks  = []
     mses = []
     avg_grades = []
