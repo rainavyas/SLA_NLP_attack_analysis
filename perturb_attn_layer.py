@@ -71,9 +71,7 @@ def get_perturbation_impact(v, head1, head2, head3, head4, labels, model, epsilo
 
     return ranks, mses, avg_grades
 
-def plot_data_vs_rank(ranks, data, yname, filename, rank_lim=768):
-    ranks = ranks[:rank_lim]
-    data = data[:rank_lim]
+def plot_data_vs_rank(ranks, data, yname, filename):
 
     plt.plot(ranks, data))
     plt.xlabel("Eigenvalue Rank")
@@ -90,7 +88,6 @@ if __name__ == '__main__':
     commandLineParser.add_argument('TEST_DATA', type=str, help='prepped test data file')
     commandLineParser.add_argument('TRAIN_GRADES', type=str, help='train data grades')
     commandLineParser.add_argument('TEST_GRADES', type=str, help='test data grades')
-    commandLineParser.add_argument('--rank_lim', type=int, default=768, help="How many principal ranks to show")
     commandLineParser.add_argument('--epsilon', type=int, default=0.1, help='l-inf perturbation size')
     commandLineParser.add_argument('--head', type=int, default=1, help="attention head")
     commandLineParser.add_argument('--stepsize', type=int, default=1, help="ranks step size for plot")
@@ -101,7 +98,6 @@ if __name__ == '__main__':
     test_data_file = args.TEST_DATA
     train_grades_file = args.TRAIN_GRADES
     test_grades_file = args.TEST_GRADES
-    rank_lim = args.rank_lim
     epsilon = args.epsilon
     head = args.head
     stepsize = args.stepsize
@@ -132,8 +128,8 @@ if __name__ == '__main__':
     # Plot the data
     filename = 'mse_eigenvector_perturb_head'+str(head)+'.png'
     yname = 'MSE'
-    plot_data_vs_rank(ranks, mses, yname, filename, rank_lim=rank_lim)
+    plot_data_vs_rank(ranks, mses, yname, filename)
 
     filename = 'avg_grade_eigenvector_perturb_head'+str(head)+'.png'
     yname = 'Average Grade'
-    plot_data_vs_rank(ranks, avg_grades, yname, filename, rank_lim=rank_lim)
+    plot_data_vs_rank(ranks, avg_grades, yname, filename)
