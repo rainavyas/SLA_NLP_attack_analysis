@@ -88,7 +88,7 @@ if __name__ == '__main__':
     commandLineParser.add_argument('TEST_DATA', type=str, help='prepped test data file')
     commandLineParser.add_argument('TRAIN_GRADES', type=str, help='train data grades')
     commandLineParser.add_argument('TEST_GRADES', type=str, help='test data grades')
-    commandLineParser.add_argument('--epsilon', type=int, default=0.1, help='l-inf perturbation size')
+    commandLineParser.add_argument('--epsilon', type=float, default=0.1, help='l-inf perturbation size')
     commandLineParser.add_argument('--head', type=int, default=1, help="attention head")
     commandLineParser.add_argument('--stepsize', type=int, default=1, help="ranks step size for plot")
 
