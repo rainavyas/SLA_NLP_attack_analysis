@@ -114,10 +114,10 @@ if __name__ == '__main__':
     ranks, mses, avg_grades = get_perturbation_impact(handler, v, input_ids, mask, labels, model, epsilon, stepsize=stepsize, token_pos=token_pos)
 
     # Plot the data
-    filename = 'mse_eigenvector_perturb_layer'+str(layer_num)+'_tokenpos'+str(token_pos)+'.png'
+    filename = 'mse_eigenvector_perturb_layer'+str(layer_num)+'_tokenpos'+str(token_pos)+'_epsilon'+str(epsilon)+'.png'
     yname = 'MSE'
     plot_data_vs_rank(ranks, mses, yname, filename)
 
-    filename = 'avg_grade_eigenvector_perturb_layer'+str(layer_num)+'_tokenpos'+str(token_pos)+'.png'
+    filename = 'avg_grade_eigenvector_perturb_layer'+str(layer_num)+'_tokenpos'+str(token_pos)+'_epsilon'+str(epsilon)+'.png'
     yname = 'Average Grade'
     plot_data_vs_rank(ranks, avg_grades, yname, filename)
