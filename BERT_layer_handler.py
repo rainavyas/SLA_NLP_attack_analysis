@@ -28,7 +28,7 @@ class Layer_Handler():
             hidden_states = layer_outputs[0]
         return hidden_states
 
-    def pass_through_rest(hidden_states, attention_mask, device=torch.device('cpu')):
+    def pass_through_rest(self, hidden_states, attention_mask, device=torch.device('cpu')):
         '''
         Pass hidden states through remainder of BertGrader model
         after nth layer
