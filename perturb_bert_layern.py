@@ -40,17 +40,18 @@ def get_perturbation_impact(handler, v, input_ids, mask, labels, model, epsilon,
         with torch.no_grad():
             attackA, attackB = make_attack(curr_v, epsilon)
             best_avg = 0
-            for attack in [attackA, attackB]:
+            # for attack in [attackA, attackB]:
+            for attack in [attackA]:
                 layer_embeddings = handler.get_layern_outputs(input_ids, mask)
                 layer_embeddings[:,token_pos,:] = layer_embeddings[:,token_pos,:] + attack
 
                 # Pass through rest of model
                 y = handler.pass_through_rest(layer_embeddings, mask)
                 mse = calculate_mse(y, labels)
-                if torch.mean(y).item() > best_avg:
-                    best_avg = torch.mean(y).item()
+                # if torch.mean(y).item() > best_avg:
+                #     best_avg = torch.mean(y).item()
             mses.append(mse.item())
-            avg_grades.append(best_avg)
+            # avg_grades.append(best_avg)
 
     return ranks, mses, avg_grades
 
@@ -118,6 +119,6 @@ if __name__ == '__main__':
     yname = 'MSE'
     plot_data_vs_rank(ranks, mses, yname, filename)
 
-    filename = 'avg_grade_eigenvector_perturb_layer'+str(layer_num)+'_tokenpos'+str(token_pos)+'_epsilon'+str(epsilon)+'.png'
-    yname = 'Average Grade'
-    plot_data_vs_rank(ranks, avg_grades, yname, filename)
+    # filename = 'avg_grade_eigenvector_perturb_layer'+str(layer_num)+'_tokenpos'+str(token_pos)+'_epsilon'+str(epsilon)+'.png'
+    # yname = 'Average Grade'
+    # plot_data_vs_rank(ranks, avg_grades, yname, filename)
