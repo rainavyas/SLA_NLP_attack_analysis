@@ -19,8 +19,8 @@ class Layer_Handler():
         Get output hidden states from nth layer
         '''
         # Need to extend mask for encoder - from HuggingFace implementation
-        input_shape = input_ids.size()
-        extended_attention_mask: torch.Tensor = self.model.encoder.get_extended_attention_mask(attention_mask, input_shape, device)
+        self.input_shape = input_ids.size()
+        extended_attention_mask: torch.Tensor = self.model.encoder.get_extended_attention_mask(attention_mask, self.input_shape, device)
 
         hidden_states = self.model.encoder.embeddings(input_ids=input_ids)
         for layer_module in self.model.encoder.encoder.layer[:self.layer_num]:
@@ -33,9 +33,7 @@ class Layer_Handler():
         Pass hidden states through remainder of BertGrader model
         after nth layer
         '''
-        # Need to extend mask for encoder - from HuggingFace implementation
-        input_shape = input_ids.size()
-        extended_attention_mask: torch.Tensor = self.model.encoder.get_extended_attention_mask(attention_mask, input_shape, device)
+        extended_attention_mask: torch.Tensor = self.model.encoder.get_extended_attention_mask(attention_mask, self.input_shape, device)
 
         for layer_module in self.model.encoder.encoder.layer[self.layer_num:]:
             layer_outputs = layer_module(hidden_states, extended_attention_mask)
