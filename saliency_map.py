@@ -50,7 +50,7 @@ def get_word_saliencies(model, input_ids, mask, labels, criterion):
 
 def plot_saliency_comparison(saliencies, saliencies_attacked, filename):
 
-    width = 0.4
+    width = 0.3
     plt.bar(np.arange(len(saliencies)), saliencies, width=width, label='Original')
     plt.bar(np.arange(len(saliencies_attacked))+width, saliencies_attacked, width=width, label='Attacked')
     plt.xlabel("Token Position")
