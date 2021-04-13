@@ -51,10 +51,11 @@ def get_word_saliencies(model, input_ids, mask, labels, criterion):
 def plot_saliency_comparison(saliencies, saliencies_attacked, filename):
 
     width = 0.4
-    plt.bar(np.arange(len(saliencies)), saliencies, width=width)
-    plt.bar(np.arange(len(saliencies_attacked)), saliencies_attacked, width=width)
+    plt.bar(np.arange(len(saliencies)), saliencies, width=width, label='Original')
+    plt.bar(np.arange(len(saliencies_attacked)), saliencies_attacked, width=width, label='Attacked')
     plt.xlabel("Token Position")
     plt.ylabel("Saliency")
+    plt.legend()
     plt.savefig(filename)
     plt.clf()
 
@@ -101,6 +102,6 @@ if __name__ == '__main__':
     saliencies_attacked = get_word_saliencies(model, input_ids_attack, mask_attack, labels, criterion)
 
     # Plot each saliency graph in turn
-    for i, sal, sal_a in enumerate(zip(saliencies, saliencies_attacked)):
+    for i, (sal, sal_a) in enumerate(zip(saliencies, saliencies_attacked)):
         filename = 'saliency_map_k'+str(len(attack_phrase))+'_sample'+str(i)
         plot_saliency_comparison(sal, sal_a, filename)
