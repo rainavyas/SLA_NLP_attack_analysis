@@ -54,7 +54,7 @@ def plot_saliency_comparison(saliencies, saliencies_attacked, filename):
     plt.bar(np.arange(len(saliencies)), saliencies, width=width, label='Original')
     plt.bar(np.arange(len(saliencies_attacked))+width, saliencies_attacked, width=width, label='Attacked')
     plt.xlabel("Token Position")
-    plt.ylabel("Saliency")
+    plt.ylabel("Normalized Saliency")
     plt.legend()
     plt.savefig(filename)
     plt.clf()
@@ -104,4 +104,7 @@ if __name__ == '__main__':
     # Plot each saliency graph in turn
     for i, (sal, sal_a) in enumerate(zip(saliencies, saliencies_attacked)):
         filename = 'saliency_map_k'+str(len(attack_phrase.split()))+'_sample'+str(i)
-        plot_saliency_comparison(sal, sal_a, filename)
+        # Normalize
+        sal_norm = [float(j)/sum(sal) for j in sal]
+        sal_a_norm = [float(j)/sum(sal_a) for j in sal_a]
+        plot_saliency_comparison(sal_norm, sal_a_norm, filename)
