@@ -103,5 +103,5 @@ if __name__ == '__main__':
 
     # Plot each saliency graph in turn
     for i, (sal, sal_a) in enumerate(zip(saliencies, saliencies_attacked)):
-        filename = 'saliency_map_k'+str(len(attack_phrase))+'_sample'+str(i)
+        filename = 'saliency_map_k'+str(len(attack_phrase.split()))+'_sample'+str(i)
         plot_saliency_comparison(sal, sal_a, filename)
