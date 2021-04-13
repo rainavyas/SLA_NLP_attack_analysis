@@ -37,7 +37,7 @@ def get_word_saliencies(model, input_ids, mask, labels, criterion):
     loss = criterion(y, labels)
 
     loss.backward()
-    embedding_grads = embeddings.grad()
+    embedding_grads = embeddings.grad
     saliency_size = torch.linalg.norm(embedding_grads, dim=-1)
 
     saliencies = []
