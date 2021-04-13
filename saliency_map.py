@@ -52,7 +52,7 @@ def plot_saliency_comparison(saliencies, saliencies_attacked, filename):
 
     width = 0.4
     plt.bar(np.arange(len(saliencies)), saliencies, width=width, label='Original')
-    plt.bar(np.arange(len(saliencies_attacked)), saliencies_attacked, width=width, label='Attacked')
+    plt.bar(np.arange(len(saliencies_attacked))+width, saliencies_attacked, width=width, label='Attacked')
     plt.xlabel("Token Position")
     plt.ylabel("Saliency")
     plt.legend()
