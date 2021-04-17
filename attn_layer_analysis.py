@@ -38,7 +38,7 @@ def get_eigenvector_decomposition_magnitude(eigenvectors, eigenvalues, X, correc
             v = eigenvectors[i]
             v_repeat = v.repeat(X.size(0), 1)
             abs_cos_dist = torch.abs(cos(X, v_repeat))
-            whitened_abs_cos_dist = abs_cos_dist/eigenvalues[i]
+            whitened_abs_cos_dist = abs_cos_dist/(eigenvalues[i]**0.5)
             cos_dists.append(torch.mean(abs_cos_dist).item())
             whitened_cos_dists.append(torch.mean(whitened_abs_cos_dist).item())
 
