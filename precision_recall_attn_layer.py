@@ -143,7 +143,7 @@ def plot_precision_recall(precision1, recall1, f05_data1, precision2, recall2, f
     plt.plot(recall1, precision1, label='Variance F0.5='+str(round(f05_data1[0], 3)))
     plt.plot(recall2, precision2, label='Avg Deviation F0.5='+str(round(f05_data2[0], 3)))
     plt.plot(f05_data1[2], f05_data1[1], "s:k")
-    plt.plot(f05_data2[2], f05_data12[1], "s:k")
+    plt.plot(f05_data2[2], f05_data2[1], "s:k")
     plt.xlabel("Recall")
     plt.ylabel("Precision")
     plt.legend()
