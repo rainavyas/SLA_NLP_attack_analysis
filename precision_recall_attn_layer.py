@@ -22,34 +22,19 @@ import os
 import argparse
 import numpy as np
 
-def get_diff(reference, target):
-    with torch.no_grad():
-        ref_repeat = reference.repeat(target.size(0), 1)
-        diff = target - ref_repeat
-    return diff
-
-def get_variance_precision_recall(reference, auth_coeff, attack_coeff, start=0, end=10, num=1000):
-    '''
-    If variance is greater than threshold, then output positive for attack
-    '''
-    auth_diff = get_diff(torch.FloatTensor(reference), auth_coeff)
-    attack_diff = get_diff(torch.FloatTensor(reference), attack_coeff)
-
-    auth_var = torch.var(auth_diff, dim=1).tolist()
-    attack_var = torch.var(attack_diff, dim=1).tolist()
-
+def pr(list_auth, list_attack, start, stop, num):
     precision = []
     recall = []
 
-    for thresh in np.linspace(start, end, num):
+    for thresh in np.linspace(start, stop, num):
         TP = 0 # true positive
         FP = 0 # false positive
-        T = len(attack_var) # Number of True Attack examples
+        T = len(list_attack) # Number of True Attack examples
 
-        for val in auth_var:
+        for val in list_auth:
             if val > thresh:
                 FP += 1
-        for val in attack_var:
+        for val in list_attack:
             if val > thresh:
                 TP += 1
 
@@ -60,6 +45,40 @@ def get_variance_precision_recall(reference, auth_coeff, attack_coeff, start=0, 
             precision.append(prec)
             recall.append(rec)
 
+    return precision, recall
+
+def get_diff(reference, target):
+    with torch.no_grad():
+        ref_repeat = reference.repeat(target.size(0), 1)
+        diff = target - ref_repeat
+    return diff
+
+def get_avg_precision_recall(reference, auth_coeff, attack_coeff, start=-3, stop=3, num=1000):
+    '''
+    If variance is greater than threshold, then output positive for attack
+    '''
+    auth_diff = get_diff(torch.FloatTensor(reference), auth_coeff)
+    attack_diff = get_diff(torch.FloatTensor(reference), attack_coeff)
+
+    auth_mean = torch.mean(auth_diff, dim=1).tolist()
+    attack_mean = torch.mean(attack_diff, dim=1).tolist()
+
+    precision, recall = pr(auth_mean, attack_mean, start, stop, num)
+    return precision, recall
+
+
+
+def get_variance_precision_recall(reference, auth_coeff, attack_coeff, start=0, stop=6, num=1000):
+    '''
+    If variance is greater than threshold, then output positive for attack
+    '''
+    auth_diff = get_diff(torch.FloatTensor(reference), auth_coeff)
+    attack_diff = get_diff(torch.FloatTensor(reference), attack_coeff)
+
+    auth_var = torch.var(auth_diff, dim=1).tolist()
+    attack_var = torch.var(attack_diff, dim=1).tolist()
+
+    precision, recall = pr(auth_var, attack_var, start, stop, num)
     return precision, recall
 
 
@@ -109,8 +128,9 @@ def get_head_embedding(input_ids, mask, model, head_num=1):
 
     return head
 
-def plot_precision_recall(precision, recall, filename):
-    plt.plot(recall, precision)
+def plot_precision_recall(precision1, recall1, precision2, recall2, filename):
+    plt.plot(recall1, precision1, label='Variance')
+    plt.plot(recall2, precision2, label='Avg Deviation')
     plt.xlabel("Recall")
     plt.ylabel("Precision")
     plt.savefig(filename)
@@ -179,6 +199,7 @@ if __name__ == '__main__':
     ranks, whitened_cos_dists_eval2_attack = get_eigenvector_decomposition_magnitude_indv(v, e, embedding, correction_mean)
 
     # Get precision and recall curve and plot it
-    precision, recall = get_variance_precision_recall(whitened_cos_dists_eval1, whitened_cos_dists_eval2, whitened_cos_dists_eval2_attack, start=0, end=10, num=1000)
-    filename = 'precision_recall_variance_head'+str(head_num)+'k'+str(len(attack_phrase.split()))+'.png'
-    plot_precision_recall(precision, recall, filename)
+    precision_var, recall_var = get_variance_precision_recall(whitened_cos_dists_eval1, whitened_cos_dists_eval2, whitened_cos_dists_eval2_attack)
+    precision_avg, recall_avg = get_avg_precision_recall(whitened_cos_dists_eval1, whitened_cos_dists_eval2, whitened_cos_dists_eval2_attack)
+    filename = 'precision_recall_variance_avg_head'+str(head_num)+'k'+str(len(attack_phrase.split()))+'.png'
+    plot_precision_recall(precision_var, recall_var, precision_avg, recall_avg, filename)
