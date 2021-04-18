@@ -133,6 +133,7 @@ def plot_precision_recall(precision1, recall1, precision2, recall2, filename):
     plt.plot(recall2, precision2, label='Avg Deviation')
     plt.xlabel("Recall")
     plt.ylabel("Precision")
+    plt.legend()
     plt.savefig(filename)
     plt.clf()
 
