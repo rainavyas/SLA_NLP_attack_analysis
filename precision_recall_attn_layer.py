@@ -53,15 +53,15 @@ def get_diff(reference, target):
         diff = target - ref_repeat
     return diff
 
-def get_avg_precision_recall(reference, auth_coeff, attack_coeff, start=-3, stop=3, num=1000, rank_start=0):
+def get_avg_precision_recall(reference, auth_coeff, attack_coeff, start=-3, stop=3, num=1000, rank_start=0, rank_end=768):
     '''
     If variance is greater than threshold, then output positive for attack
     '''
     auth_diff = get_diff(torch.FloatTensor(reference), auth_coeff)
     attack_diff = get_diff(torch.FloatTensor(reference), attack_coeff)
 
-    auth_diff = auth_diff[:, rank_start:]
-    attack_diff = attack_diff[:, rank_start:]
+    auth_diff = auth_diff[:, rank_start:rank_end]
+    attack_diff = attack_diff[:, rank_start:rank_end]
 
     auth_mean = torch.mean(auth_diff, dim=1).tolist()
     attack_mean = torch.mean(attack_diff, dim=1).tolist()
@@ -71,15 +71,15 @@ def get_avg_precision_recall(reference, auth_coeff, attack_coeff, start=-3, stop
 
 
 
-def get_variance_precision_recall(reference, auth_coeff, attack_coeff, start=0, stop=6, num=1000, rank_start=0):
+def get_variance_precision_recall(reference, auth_coeff, attack_coeff, start=0, stop=6, num=1000, rank_start=0, rank_end=768):
     '''
     If variance is greater than threshold, then output positive for attack
     '''
     auth_diff = get_diff(torch.FloatTensor(reference), auth_coeff)
     attack_diff = get_diff(torch.FloatTensor(reference), attack_coeff)
 
-    auth_diff = auth_diff[:, rank_start:]
-    attack_diff = attack_diff[:, rank_start:]
+    auth_diff = auth_diff[:, rank_start:rank_end]
+    attack_diff = attack_diff[:, rank_start:rank_end]
 
     auth_var = torch.var(auth_diff, dim=1).tolist()
     attack_var = torch.var(attack_diff, dim=1).tolist()
@@ -156,6 +156,7 @@ if __name__ == '__main__':
     commandLineParser.add_argument('--head_num', type=int, default=1, help='Select attention head')
     commandLineParser.add_argument('--held1_size', type=int, default=100, help='Size of held out set 1')
     commandLineParser.add_argument('--rank_start', type=int, default=0, help='Eigenvector rank start for metric calculation')
+    commandLineParser.add_argument('--rank_end', type=int, default=768, help='Eigenvector rank end for metric calculation')
 
     args = commandLineParser.parse_args()
     model_path = args.MODEL
@@ -167,6 +168,7 @@ if __name__ == '__main__':
     head_num = args.head_num
     held1_size = args.held1_size
     rank_start = args.rank_start
+    rank_end = args.rank_end
 
     # Save the command run
     if not os.path.isdir('CMDs'):
@@ -208,7 +210,7 @@ if __name__ == '__main__':
     ranks, whitened_cos_dists_eval2_attack = get_eigenvector_decomposition_magnitude_indv(v, e, embedding, correction_mean)
 
     # Get precision and recall curve and plot it
-    precision_var, recall_var = get_variance_precision_recall(whitened_cos_dists_eval1, whitened_cos_dists_eval2, whitened_cos_dists_eval2_attack, rank_start=rank_start)
-    precision_avg, recall_avg = get_avg_precision_recall(whitened_cos_dists_eval1, whitened_cos_dists_eval2, whitened_cos_dists_eval2_attack, rank_start=rank_start)
-    filename = 'precision_recall_variance_avg_head'+str(head_num)+'k'+str(len(attack_phrase.split()))+'rank_start'+str(rank_start)+'.png'
+    precision_var, recall_var = get_variance_precision_recall(whitened_cos_dists_eval1, whitened_cos_dists_eval2, whitened_cos_dists_eval2_attack, rank_start=rank_start, rank_end=rank_end)
+    precision_avg, recall_avg = get_avg_precision_recall(whitened_cos_dists_eval1, whitened_cos_dists_eval2, whitened_cos_dists_eval2_attack, rank_start=rank_start, rank_end=rank_end)
+    filename = 'precision_recall_variance_avg_head'+str(head_num)+'k'+str(len(attack_phrase.split()))+'_rank_start'+str(rank_start)+'_rank_end'+str(rank_end)+'.png'
     plot_precision_recall(precision_var, recall_var, precision_avg, recall_avg, filename)
