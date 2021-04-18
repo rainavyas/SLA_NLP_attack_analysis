@@ -50,7 +50,7 @@ def pr(list_auth, list_attack, start, stop, num):
             precision.append(prec)
             recall.append(rec)
 
-    return precision, recall
+    return precision, recall, f05
 
 def get_diff(reference, target):
     with torch.no_grad():
