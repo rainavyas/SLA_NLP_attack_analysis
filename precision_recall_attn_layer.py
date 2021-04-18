@@ -39,7 +39,7 @@ def pr(list_auth, list_attack, start, stop, num):
             if val > thresh:
                 TP += 1
 
-        if (TP+FP > 0):
+        if (TP+FP > 0) and TP>0:
             prec = TP/(TP+FP)
             rec = TP/T
 
