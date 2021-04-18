@@ -25,6 +25,7 @@ import numpy as np
 def pr(list_auth, list_attack, start, stop, num):
     precision = []
     recall = []
+    f05 = (0, 0, 0) # (F0.5, prec, recall)
 
     for thresh in np.linspace(start, stop, num):
         TP = 0 # true positive
@@ -41,6 +42,10 @@ def pr(list_auth, list_attack, start, stop, num):
         if (TP+FP > 0):
             prec = TP/(TP+FP)
             rec = TP/T
+
+            curr_f05 = (1.25*prec*rec)/((0.25*prec) + rec)
+            if curr_f05 > f05[0]:
+                f05 = (curr_f05, prec, rec)
 
             precision.append(prec)
             recall.append(rec)
@@ -66,8 +71,8 @@ def get_avg_precision_recall(reference, auth_coeff, attack_coeff, start=-3, stop
     auth_mean = torch.mean(auth_diff, dim=1).tolist()
     attack_mean = torch.mean(attack_diff, dim=1).tolist()
 
-    precision, recall = pr(auth_mean, attack_mean, start, stop, num)
-    return precision, recall
+    precision, recall, f05_data = pr(auth_mean, attack_mean, start, stop, num)
+    return precision, recall, f05_data
 
 
 
@@ -84,8 +89,8 @@ def get_variance_precision_recall(reference, auth_coeff, attack_coeff, start=0, 
     auth_var = torch.var(auth_diff, dim=1).tolist()
     attack_var = torch.var(attack_diff, dim=1).tolist()
 
-    precision, recall = pr(auth_var, attack_var, start, stop, num)
-    return precision, recall
+    precision, recall, f05_data = pr(auth_var, attack_var, start, stop, num)
+    return precision, recall, f05_data
 
 
 def get_eigenvector_decomposition_magnitude_indv(eigenvectors, eigenvalues, X, correction_mean):
@@ -134,9 +139,11 @@ def get_head_embedding(input_ids, mask, model, head_num=1):
 
     return head
 
-def plot_precision_recall(precision1, recall1, precision2, recall2, filename):
-    plt.plot(recall1, precision1, label='Variance')
-    plt.plot(recall2, precision2, label='Avg Deviation')
+def plot_precision_recall(precision1, recall1, f05_data1, precision2, recall2, f05_data2, filename):
+    plt.plot(recall1, precision1, label='Variance F0.5='+str(round(f05_data1[0], 3)))
+    plt.plot(recall2, precision2, label='Avg Deviation F0.5='+str(round(f05_data2[0], 3)))
+    plt.plot(f05_data1[2], f05_data1[1], "s:k")
+    plt.plot(f05_data2[2], f05_data12[1], "s:k")
     plt.xlabel("Recall")
     plt.ylabel("Precision")
     plt.legend()
@@ -210,7 +217,7 @@ if __name__ == '__main__':
     ranks, whitened_cos_dists_eval2_attack = get_eigenvector_decomposition_magnitude_indv(v, e, embedding, correction_mean)
 
     # Get precision and recall curve and plot it
-    precision_var, recall_var = get_variance_precision_recall(whitened_cos_dists_eval1, whitened_cos_dists_eval2, whitened_cos_dists_eval2_attack, rank_start=rank_start, rank_end=rank_end)
-    precision_avg, recall_avg = get_avg_precision_recall(whitened_cos_dists_eval1, whitened_cos_dists_eval2, whitened_cos_dists_eval2_attack, rank_start=rank_start, rank_end=rank_end)
+    precision_var, recall_var, f05_var = get_variance_precision_recall(whitened_cos_dists_eval1, whitened_cos_dists_eval2, whitened_cos_dists_eval2_attack, rank_start=rank_start, rank_end=rank_end)
+    precision_avg, recall_avg, f05_avg = get_avg_precision_recall(whitened_cos_dists_eval1, whitened_cos_dists_eval2, whitened_cos_dists_eval2_attack, rank_start=rank_start, rank_end=rank_end)
     filename = 'precision_recall_variance_avg_head'+str(head_num)+'k'+str(len(attack_phrase.split()))+'_rank_start'+str(rank_start)+'_rank_end'+str(rank_end)+'.png'
-    plot_precision_recall(precision_var, recall_var, precision_avg, recall_avg, filename)
+    plot_precision_recall(precision_var, recall_var, f05_var, precision_avg, recall_avg, f05_var, filename)
