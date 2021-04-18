@@ -81,7 +81,7 @@ def get_eigenvector_decomposition_magnitude_indv(eigenvectors, eigenvalues, X, c
             abs_cos_dist = torch.abs(cos(X, v_repeat))
             whitened_abs_cos_dist = abs_cos_dist/(eigenvalues[i]**0.5)
             whitened_cos_dists.append(whitened_abs_cos_dist)
-        whitened_cos_dists = torch.stack(whitened_cos_dists)
+        whitened_cos_dists = torch.stack(whitened_cos_dists, dim=1)
 
     return ranks, whitened_cos_dists
 
