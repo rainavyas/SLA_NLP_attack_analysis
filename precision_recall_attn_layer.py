@@ -53,11 +53,12 @@ def get_variance_precision_recall(reference, auth_coeff, attack_coeff, start=0, 
             if val > thresh:
                 TP += 1
 
-        prec = TP/(TP+FP)
-        rec = TP/T
+        if (TP+FP > 0):
+            prec = TP/(TP+FP)
+            rec = TP/T
 
-        precision.append(prec)
-        recall.append(rec)
+            precision.append(prec)
+            recall.append(rec)
 
     return precision, recall
 
