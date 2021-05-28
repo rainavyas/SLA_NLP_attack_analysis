@@ -116,4 +116,4 @@ if __name__ == '__main__':
                             palette=cmap)
 
 
-    sns_plot.savefig(out_file)
+    sns_plot.figure.savefig(out_file)
