@@ -66,6 +66,7 @@ if __name__ == '__main__':
     commandLineParser.add_argument('TEST_DATA', type=str, help='prepped test data file')
     commandLineParser.add_argument('TRAIN_GRADES', type=str, help='train data grades')
     commandLineParser.add_argument('TEST_GRADES', type=str, help='test data grades')
+    commandLineParser.add_argument('ATTACK', type=str, help='universal attack phrase for eval set')
     commandLineParser.add_argument('OUT', type=str, help='.png file to save plot to')
     commandLineParser.add_argument('--head_num', type=int, default=1, help="Head embedding to analyse")
     commandLineParser.add_argument('--num_comps', type=int, default=2, help="number of PCA components")
@@ -77,6 +78,7 @@ if __name__ == '__main__':
     test_data_file = args.TEST_DATA
     train_grades_file = args.TRAIN_GRADES
     test_grades_file = args.TEST_GRADES
+    attack_phrase = args.ATTACK
     out_file = args.OUT
     head_num = args.head_num
     num_comps = args.num_comps
@@ -101,7 +103,7 @@ if __name__ == '__main__':
         e, v = get_e_v(cov)
     
     # Map test data to PCA components
-    embeddings, labels = get_head_embedding(test_data_file, test_grades_file, model, attack_phrase='', head_num=head_num)
+    embeddings, labels = get_head_embedding(test_data_file, test_grades_file, model, attack_phrase=attack_phrase, head_num=head_num)
     pca_comps = get_pca_principal_components(v, correction_mean, embeddings, num_comps, start)
 
     # Plot all the data
