@@ -65,3 +65,17 @@ class AverageMeter(object):
         self.sum += val * n
         self.count += n
         self.avg = self.sum / self.count
+
+def accuracy_topk(output, target, k=1):
+    """Computes the topk accuracy"""
+    batch_size = target.size(0)
+
+    _, pred = torch.topk(output, k=k, dim=1, largest=True, sorted=True)
+
+    res_total = 0
+    for curr_k in range(k):
+      curr_ind = pred[:,curr_k]
+      num_eq = torch.eq(curr_ind, target).sum()
+      acc = num_eq/len(output)
+      res_total += acc
+    return res_total*100
