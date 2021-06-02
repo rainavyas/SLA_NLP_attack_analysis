@@ -14,7 +14,7 @@ from torch.utils.data import TensorDataset
 from torch.utils.data import DataLoader
 from pca_tools import get_covariance_matrix, get_e_v
 from models import BERTGrader
-from attn_layer_analysis import get_head_embedding
+from pca_component_comparison_plot_comps import get_head_embedding
 
 def get_pca_principal_components(eigenvectors, correction_mean, X, num_comps, start):
     '''
