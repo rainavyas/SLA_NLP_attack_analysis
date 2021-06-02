@@ -166,8 +166,7 @@ if __name__ == '__main__':
 
     # Load the model
     model = BERTGrader()
-    model.load_state_dict(torch.load(model_path))
-    model.to(device)
+    model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
     model.eval()
 
     # Use training data to get eigenvector basis of head embedding
