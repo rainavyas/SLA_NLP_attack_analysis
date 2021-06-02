@@ -5,7 +5,6 @@ Plots the eval data on specified PCA axes, colour coded by CEFR Grade.
 
 import torch
 import torch.nn as nn
-from attn_layer_analysis import get_head_embedding
 import sys
 import os
 import argparse
