@@ -24,7 +24,7 @@ def is_suppressed(model, data_file, grades_file, attack_phrase, detector_path, e
     '''
     Returns true if trained detector doesn't detect the adversarial attack.
     Assumes detector use first 'num_comps=400' PCA components for classification
-    detect_prob=0.5 means for TRUE to be returned at least 50% of samples avoid detection 
+    detect_prob means for TRUE to be returned at least (1-detect_prob)% of samples avoid detection 
     '''
     # Load adv attack detector
     detector = LayerClassifier(num_comps)
@@ -65,6 +65,7 @@ if __name__ == "__main__":
     commandLineParser.add_argument('--B', type=int, default=16, help="Specify batch size")
     commandLineParser.add_argument('--SEARCH_SIZE', type=int, default=400, help='Number of words to check')
     commandLineParser.add_argument('--START', type=int, default=0, help='Batch number')
+    commandLineParser.add_argument('--DETECT_PROB', type=float, default=0.5, help='Detection probability of found universal attack')
 
 
     args = commandLineParser.parse_args()
@@ -80,6 +81,7 @@ if __name__ == "__main__":
     batch_size = args.B
     search_size = args.SEARCH_SIZE
     start = args.START
+    detect_prob = args.DETECT_PROB
 
     # Save the command run
     if not os.path.isdir('CMDs'):
@@ -113,7 +115,7 @@ if __name__ == "__main__":
         attack_phrase = prev_attack_phrase + ' ' + word
         avg = get_avg(model, data_file, grades_file, attack_phrase, batch_size)
 
-        if avg > best[1] and is_suppressed(model, data_file, grades_file, attack_phrase, detector_path, eigenvectors_path, correction_mean_path):
+        if avg > best[1] and is_suppressed(model, data_file, grades_file, attack_phrase, detector_path, eigenvectors_path, correction_mean_path, detect_prob=detect_prob):
             best = (word, avg)
             # Write to log
             with open(log_file, 'a') as f:
