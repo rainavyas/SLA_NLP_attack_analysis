@@ -107,7 +107,7 @@ if __name__ == "__main__":
 
     # Initialise empty log file
     with open(log_file, 'w') as f:
-        f.write("Logged on "+ str(date.today()))
+        f.write("Logged on "+ str(date.today()) + "with detect_prob="+str(detect_prob))
 
 
     best = ('none', 0)
