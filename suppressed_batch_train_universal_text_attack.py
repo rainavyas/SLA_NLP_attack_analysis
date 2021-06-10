@@ -20,7 +20,7 @@ from linear_pca_classifier import LayerClassifier, get_pca_principal_components
 from pca_component_comparison_plot_comps import get_head_embedding
 from linear_pca_classifier import get_pca_principal_components
 
-def is_suppressed(model, data_file, grades_file, attack_phrase, detector_path, eigenvectors_path, correction_mean_path, num_comps=400, detect_prob=0.5):
+def is_suppressed(model, data_file, grades_file, attack_phrase, detector_path, eigenvectors_path, correction_mean_path, num_comps=400, detect_prob=0.75):
     '''
     Returns true if trained detector doesn't detect the adversarial attack.
     Assumes detector use first 'num_comps=400' PCA components for classification
@@ -42,7 +42,7 @@ def is_suppressed(model, data_file, grades_file, attack_phrase, detector_path, e
         adv_labels = torch.LongTensor([1]*len(comps))
     adv_detection_accuracy = accuracy_topk(preds, adv_labels)
 
-    if adv_detection_accuracy > detect_prob:
+    if adv_detection_accuracy < detect_prob:
         return True 
     else:
         return False
