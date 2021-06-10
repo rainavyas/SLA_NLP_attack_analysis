@@ -40,7 +40,7 @@ def is_suppressed(model, data_file, grades_file, attack_phrase, detector_path, e
     with torch.no_grad():
         preds = detector(comps)
         adv_labels = torch.LongTensor([1]*len(comps))
-    adv_detection_accuracy = accuracy_topk(preds, adv_labels)
+    adv_detection_accuracy = accuracy_topk(preds, adv_labels)/100
 
     if adv_detection_accuracy < detect_prob:
         return True 
