@@ -12,7 +12,7 @@ import numpy as np
 from sklearn.metrics import precision_recall_curve
 from sklearn.metrics import precision_recall_fscore_support
 import matplotlib.pyplot as plt
-from models import BertGrader
+from models import BERTGrader
 from pca_component_comparison_plot_comps import get_head_embedding
 from linear_pca_classifier import get_pca_principal_components, LayerClassifier
 
@@ -68,7 +68,7 @@ if __name__ == '__main__':
         device = get_default_device()
 
     # Load the Sentiment Classifier model
-    model = BertGrader()
+    model = BERTGrader()
     model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
     model.eval()
 
