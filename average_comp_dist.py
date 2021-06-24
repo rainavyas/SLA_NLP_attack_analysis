@@ -90,7 +90,7 @@ if __name__ == '__main__':
     # Plot the results
     ranks = np.arange(len(original_avg_comps))
     plt.plot(ranks, original_avg_comps, label='Original')
-    plt.plot(ranks, attack_avg_comps, label='Attacked')
+    plt.plot(ranks, attack_avg_comps, label='Attacked', alpha=0.75)
     plt.yscale('log')
     plt.xlabel('Rank')
     plt.ylabel('Average Component Size')
