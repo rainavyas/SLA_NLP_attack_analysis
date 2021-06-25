@@ -106,13 +106,13 @@ if __name__ == '__main__':
     pca_comps = get_pca_principal_components(v, correction_mean, embeddings, num_comps, start)
 
     # Plot all the data
-    df = pd.DataFrame({"PCA 0":pca_comps[0], "PCA 1":pca_comps[1], "grade":labels})
+    df = pd.DataFrame({"PCA "+str(start):pca_comps[0], "PCA "+str(start+1):pca_comps[1], "grade":labels})
     sns.set_theme(style="whitegrid")
     cmap = sns.cubehelix_palette(rot=-.2, as_cmap=True)
     sns_plot = sns.scatterplot(
                             data=df,
-                            x="PCA 0",
-                            y="PCA 1",
+                            x="PCA "+str(start),
+                            y="PCA "+str(start+1),
                             hue="grade",
                             palette=cmap)
 
