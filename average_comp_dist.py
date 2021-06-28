@@ -15,6 +15,11 @@ import matplotlib.pyplot as plt
 from models import BERTGrader
 from pca_component_comparison_plot_comps import get_head_embedding
 
+def plot_avg_abs_diff(vals1, vals2):
+    with torch.no_grad():
+        diff = torch.abs(vals1 - vals2)
+        return torch.mean(diff)
+
 def get_avg_comps(X, eigenvectors, correction_mean):
     '''
     For each eigenvector, calculates average (across batch)
@@ -97,3 +102,5 @@ if __name__ == '__main__':
     plt.legend()
     plt.savefig(out_file)
 
+    # Report the average (across rank) absolute difference in the plot
+    print("Diff", plot_avg_abs_diff(original_avg_comps, attack_embeddings))
