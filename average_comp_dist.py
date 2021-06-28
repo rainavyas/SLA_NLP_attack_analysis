@@ -32,7 +32,7 @@ def avg_stds(original, attack):
         original_mean = torch.mean(original, dim=1)
         attack_mean = torch.mean(attack, dim=1)
         original_std = torch.std(original, dim=1)
-        diff = attack_mean - original_mean
+        diff = torch.abs(attack_mean - original_mean)
         std_diff = diff/original_std
         return torch.mean(std_diff)
 
