@@ -16,8 +16,9 @@ from models import BERTGrader
 from pca_component_comparison_plot_comps import get_head_embedding
 
 def plot_avg_abs_diff(vals1, vals2):
+    # Normalise by vals1
     with torch.no_grad():
-        diff = torch.abs(vals1 - vals2)
+        diff = torch.abs(vals1 - vals2)/vals1
         return torch.mean(diff)
 
 def get_avg_comps(X, eigenvectors, correction_mean):
