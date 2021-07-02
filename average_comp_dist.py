@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 from models import BERTGrader
 from pca_component_comparison_plot_comps import get_head_embedding
 
-def avg_stds(original, attack):
+def stds(original, attack):
     '''
     original: Tensor [num_ranks x num_data_points]
     attack: Tensor [num_ranks x num_data_points]
@@ -34,7 +34,7 @@ def avg_stds(original, attack):
         original_std = torch.std(original, dim=1)
         diff = torch.abs(attack_mean - original_mean)
         std_diff = diff/original_std
-        return torch.mean(std_diff)
+        return std_diff
 
 def get_all_comps(X, eigenvectors, correction_mean):
     '''
@@ -129,13 +129,25 @@ if __name__ == '__main__':
     plt.plot(ranks, original_avg_comps, label='Original')
     plt.plot(ranks, attack_avg_comps, label='Attacked', alpha=0.75)
     plt.yscale('log')
-    plt.xlabel('Rank')
+    plt.xlabel('Eigenvalue Rank')
     plt.ylabel('Average Component Size')
     plt.legend()
     plt.savefig(out_file)
+    plt.clf()
 
     # Report std diff between attack and original curves
     original_comps = get_all_comps(original_embeddings, eigenvectors, correction_mean)
     attack_comps = get_all_comps(attack_embeddings, eigenvectors, correction_mean)
 
-    print("OOD metric", avg_stds(original_comps, attack_comps))
+    std_diffs = stds(original_comps, attack_comps)
+    print("OOD metric", torch.mean(std_diffs))
+
+    # Plot std_diffs ranked by size
+    std_diffs_ordered, _ = torch.sort(std_diffs)
+    ranks = np.arange(len(std_diffs_ordered))
+    
+    plt.plot(ranks, std_diffs_ordered)
+    plt.xlabel('std difference rank')
+    plt.ylabel('std difference')
+    plt.savefig('std_'+out_file)
+    plt.clf()
